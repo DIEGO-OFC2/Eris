@@ -20,6 +20,8 @@ declare namespace Eris {
   // TYPES
 
   // Application Commands
+  type ApplicationCommandContextTypes = (typeof Constants["ApplicationCommandContextType"][keyof typeof Constants["ApplicationCommandContextType"]]);
+  type ApplicationCommandIntegrationTypes = (typeof Constants["ApplicationCommandIntegrationTypes"][keyof typeof Constants["ApplicationCommandIntegrationTypes"]]);
   type ApplicationCommandOptions = ApplicationCommandOptionsSubCommand | ApplicationCommandOptionsSubCommandGroup | ApplicationCommandOptionsWithValue;
   type ApplicationCommandOptionsBoolean = ApplicationCommandOption<Constants["ApplicationCommandOptionTypes"]["BOOLEAN"]>;
   type ApplicationCommandOptionsChannel = ApplicationCommandOption<Constants["ApplicationCommandOptionTypes"]["CHANNEL"]>;
@@ -171,6 +173,7 @@ declare namespace Eris {
   type SelectMenuNonResolvedTypes = Constants["ComponentTypes"][keyof Pick<Constants["ComponentTypes"], "STRING_SELECT">];
   type SelectMenuResolvedTypes = Constants["ComponentTypes"][keyof Pick<Constants["ComponentTypes"], "USER_SELECT" | "ROLE_SELECT" | "MENTIONABLE_SELECT" | "CHANNEL_SELECT">];
   type SelectMenuTypes = SelectMenuNonResolvedTypes | SelectMenuResolvedTypes;
+  type MessageInteractionMetadata = MessageComponentInteractionMetadata | ApplicationCommandInteractionMetadata | ModelSubmitInteractionMetadata;
 
   // Permission
   type PermissionType = Constants["PermissionOverwriteTypes"][keyof Constants["PermissionOverwriteTypes"]];
@@ -231,7 +234,9 @@ declare namespace Eris {
   }
   /** Generic T is `true` if creating Guild scoped commands, and `false` if not */
   interface ApplicationCommandCreateOptions<T extends boolean, U = ApplicationCommandTypes> extends ApplicationCommandEditOptions<T, U> {
+    contexts?: ApplicationCommandContextTypes[];
     description: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] ? string : "" | void;
+    integrationTypes?: ApplicationCommandIntegrationTypes[];
     name: string;
     type?: U;
   }
@@ -1388,6 +1393,10 @@ declare namespace Eris {
     target_id?: string;
     options: InteractionDataOptions[];
   }
+  interface AuthorizingIntegrationOwners {
+    guildInstall?: string;
+    userInstall: string;
+  }
   interface CommandInteractionData {
     id: string;
     name: string;
@@ -1635,6 +1644,26 @@ declare namespace Eris {
     name: string;
     type: InteractionTypes;
     user: User;
+  }
+  interface BaseMessageMetadata {
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    id: string;
+    originalResponseMessageID?: string;
+    type: InteractionTypes;
+    user: User;
+  }
+  interface ApplicationCommandInteractionMetadata extends BaseMessageMetadata {
+    targetMessageID?: string;
+    targetUser?: User;
+    type: Constants["InteractionTypes"]["APPLICATION_COMMAND"];
+  }
+  interface MessageComponentInteractionMetadata extends BaseMessageMetadata {
+    interactedMessageID: string;
+    type: Constants["InteractionTypes"]["MESSAGE_COMPONENT"];
+  }
+  interface ModelSubmitInteractionMetadata extends BaseMessageMetadata {
+    triggeringInteractionMetadata: MessageComponentInteractionMetadata | ApplicationCommandInteractionMetadata;
+    type: Constants["InteractionTypes"]["MODAL_SUBMIT"];
   }
   interface MessageReference extends MessageReferenceBase {
     channelID: string;
@@ -2033,12 +2062,23 @@ declare namespace Eris {
     [key: string]: unknown;
   }
   interface OAuthApplicationInfo {
+    approximate_guild_count?: number;
+    approximate_user_install_count?: number;
     bot?: PartialUser;
     bot_public: boolean;
     bot_require_code_grant: boolean;
+    custom_install_url?: string;
     description: string;
     icon: string | null;
     id: string;
+    integration_types_config: {
+      0?: OAuthApplicationIntegrationTypeConfiguration;
+      1?: OAuthApplicationIntegrationTypeConfiguration;
+    }; // TODO: Configure types for this properly
+    install_params?: {
+      scopes: string[];
+      permissions: string;
+    };
     name: string;
     owner: PartialUser;
     privacy_policy_url?: string;
@@ -2047,6 +2087,12 @@ declare namespace Eris {
     team: OAuthTeamInfo | null;
     terms_of_service_url?: string;
     verify_key: string;
+  }
+  interface OAuthApplicationIntegrationTypeConfiguration {
+    oauth2_install_params?: {
+      scopes: string[];
+      permissions: string;
+    };
   }
   interface OAuthTeamInfo {
     icon: string | null;
@@ -2081,6 +2127,7 @@ declare namespace Eris {
   /** Generic T is `true` if a Guild scoped command, and `false` if not */
   export class ApplicationCommand<T extends boolean, U = ApplicationCommandTypes> extends Base {
     applicationID: string;
+    contexts?: ApplicationCommandContextTypes[] | null;
     defaultMemberPermissions: Permission;
     /** @deprecated */
     defaultPermission?: boolean | null;
@@ -2088,6 +2135,7 @@ declare namespace Eris {
     descriptionLocalizations?: U extends "CHAT_INPUT" ? Record<LocaleStrings, string> | null : null;
     dmPermission?: boolean;
     guild: T extends true ? PossiblyUncachedGuild : never;
+    integrationTypes?: ApplicationCommandIntegrationTypes[];
     name: string;
     nameLocalizations?: Record<LocaleStrings, string> | null;
     nsfw?: boolean;
@@ -2970,6 +3018,7 @@ declare namespace Eris {
   export class AutocompleteInteraction<T extends PossiblyUncachedTextableChannel = TextableChannel> extends Interaction {
     appPermissions?: Permission;
     channel: T;
+    context: ApplicationCommandContextTypes;
     data: AutocompleteInteractionData;
     guildID: T extends AnyGuildChannel ? string : undefined;
     member: T extends AnyGuildChannel ? Member : undefined;
@@ -2982,6 +3031,7 @@ declare namespace Eris {
   export class Interaction extends Base {
     acknowledged: boolean;
     applicationID: string;
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     id: string;
     token: string;
     type: number;
@@ -2998,6 +3048,7 @@ declare namespace Eris {
   export class CommandInteraction<T extends PossiblyUncachedTextableChannel = TextableChannel> extends Interaction {
     appPermissions?: Permission;
     channel: T;
+    context: ApplicationCommandContextTypes;
     data: CommandInteractionData;
     guildID: T extends AnyGuildChannel ? string : undefined;
     member: T extends AnyGuildChannel ? Member : undefined;
@@ -3018,6 +3069,7 @@ declare namespace Eris {
   export class ComponentInteraction<T extends PossiblyUncachedTextableChannel = TextableChannel> extends Interaction {
     appPermissions?: Permission;
     channel: T;
+    context: ApplicationCommandContextTypes;
     data: ComponentInteractionButtonData | ComponentInteractionSelectMenuData;
     guildID: T extends AnyGuildChannel ? string : undefined;
     member: T extends AnyGuildChannel ? Member : undefined;
@@ -3157,7 +3209,9 @@ declare namespace Eris {
     flags: number;
     guildID: T extends GuildTextableWithThreads ? string : undefined;
     id: string;
+    /** @deprecated */
     interaction: MessageInteraction | null;
+    interactionMetadata: MessageInteractionMetadata | null;
     jumpLink: string;
     member: T extends GuildTextableWithThreads ? Member : null;
     mentionEveryone: boolean;
@@ -3198,6 +3252,7 @@ declare namespace Eris {
 
   export class ModalSubmitInteraction<T extends PossiblyUncachedTextableChannel = TextableChannel> extends Interaction {
     channel: T;
+    context: ApplicationCommandContextTypes;
     data: ModalSubmitInteractionData;
     guildID: T extends AnyGuildChannel ? string : undefined;
     member: T extends AnyGuildChannel ? Member : undefined;
