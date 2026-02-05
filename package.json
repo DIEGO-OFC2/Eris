@@ -40,7 +40,7 @@
   },
   "homepage": "https://abal.moe/Eris/",
   "dependencies": {
-    "ws": "^8.2.3"
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "sodium-native": "^1.0.18",
