@@ -57,6 +57,7 @@
     "typescript-eslint": "^8.2.0"
   },
   "optionalDependencies": {
+    "@stablelib/xchacha20poly1305": "~1.0.1",
     "opusscript": "^0.0.8",
     "tweetnacl": "^1.0.3"
   },
