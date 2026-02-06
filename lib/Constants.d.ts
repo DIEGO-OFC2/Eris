@@ -1,6 +1,7 @@
 export default interface Constants {
-  GATEWAY_VERSION: 10;
-  REST_VERSION:    10;
+  GATEWAY_VERSION: 9;
+  REST_VERSION:    9;
+  VOICE_VERSION:   8;
   ActivityFlags: {
     INSTANCE:                    1;
     JOIN:                        2;
@@ -13,8 +14,6 @@ export default interface Constants {
     EMBEDDED:                    256;
   };
   ActivityTypes: {
-    PLAYING:   0;
-    /** @deprecated */
     GAME:      0;
     STREAMING: 1;
     LISTENING: 2;
@@ -109,25 +108,21 @@ export default interface Constants {
 
     APPLICATION_COMMAND_PERMISSION_UPDATE: 121;
 
-    AUTO_MODERATION_RULE_CREATE:                 140;
-    AUTO_MODERATION_RULE_UPDATE:                 141;
-    AUTO_MODERATION_RULE_DELETE:                 142;
-    AUTO_MODERATION_BLOCK_MESSAGE:               143;
-    AUTO_MODERATION_FLAG_TO_CHANNEL:             144;
-    AUTO_MODERATION_USER_COMMUNICATION_DISABLED: 145;
+    AUTO_MODERATION_RULE_CREATE:   140;
+    AUTO_MODERATION_RULE_UPDATE:   141;
+    AUTO_MODERATION_RULE_DELETE:   142;
+    AUTO_MODERATION_BLOCK_MESSAGE: 143;
 
     VOICE_CHANNEL_STATUS_UPDATE: 192;
     VOICE_CHANNEL_STATUS_DELETE: 193;
   };
   AutoModerationActionTypes: {
-    BLOCK_MESSAGE:            1;
-    SEND_ALERT_MESSAGE:       2;
-    TIMEOUT:                  3;
-    BLOCK_MEMBER_INTERACTION: 4;
+    BLOCK_MESSAGE:      1;
+    SEND_ALERT_MESSAGE: 2;
+    TIMEOUT:            3;
   };
   AutoModerationEventTypes: {
-    MESSAGE_SEND:  1;
-    MEMBER_UPDATE: 2;
+    MESSAGE_SEND: 1;
   };
   AutoModerationKeywordPresetTypes: {
     PROFANITY:      1;
@@ -136,12 +131,9 @@ export default interface Constants {
   };
   AutoModerationTriggerTypes: {
     KEYWORD:        1;
-    /** @deprecated */
     HARMFUL_LINK:   2;
     SPAM:           3;
     KEYWORD_PRESET: 4;
-    MENTION_SPAM:   5;
-    MEMBER_PROFILE: 6;
   };
   ButtonStyles: {
     PRIMARY:   1;
@@ -174,14 +166,10 @@ export default interface Constants {
     GUILD_MEDIA:          16;
   };
   ComponentTypes: {
-    ACTION_ROW:         1;
-    BUTTON:             2;
-    STRING_SELECT:      3;
-    TEXT_INPUT:         4;
-    USER_SELECT:        5;
-    ROLE_SELECT:        6;
-    MENTIONABLE_SELECT: 7;
-    CHANNEL_SELECT:     8;
+    ACTION_ROW:  1;
+    BUTTON:      2;
+    SELECT_MENU: 3;
+    TEXT_INPUT:  4;
   };
   ForumLayoutTypes: {
     NOT_SET:      0;
@@ -202,26 +190,24 @@ export default interface Constants {
     ALL_MEMBERS:           2;
   };
   GatewayOPCodes: {
-    DISPATCH:                  0;
+    DISPATCH:              0;
     /** @deprecated */
-    EVENT:                     0;
-    HEARTBEAT:                 1;
-    IDENTIFY:                  2;
-    PRESENCE_UPDATE:           3;
+    EVENT:                 0;
+    HEARTBEAT:             1;
+    IDENTIFY:              2;
+    PRESENCE_UPDATE:       3;
     /** @deprecated */
-    STATUS_UPDATE:             3;
-    VOICE_STATE_UPDATE:        4;
-    VOICE_SERVER_PING:         5;
-    RESUME:                    6;
-    RECONNECT:                 7;
-    REQUEST_GUILD_MEMBERS:     8;
+    STATUS_UPDATE:         3;
+    VOICE_STATE_UPDATE:    4;
+    VOICE_SERVER_PING:     5;
+    RESUME:                6;
+    RECONNECT:             7;
+    REQUEST_GUILD_MEMBERS: 8;
     /** @deprecated */
-    GET_GUILD_MEMBERS:         8;
-    INVALID_SESSION:           9;
-    HELLO:                     10;
-    HEARTBEAT_ACK:             11;
-    // Unknown 12-30
-    REQUEST_SOUNDBOARD_SOUNDS: 31;
+    GET_GUILD_MEMBERS:     8;
+    INVALID_SESSION:       9;
+    HELLO:                 10;
+    HEARTBEAT_ACK:         11;
   };
   GuildFeatures: [
     "ANIMATED_BANNER",
@@ -229,25 +215,27 @@ export default interface Constants {
     "APPLICATION_COMMAND_PERMISSIONS_V2",
     "AUTO_MODERATION",
     "BANNER",
+    "COMMERCE",
     "COMMUNITY",
     "CREATOR_MONETIZABLE_PROVISIONAL",
     "CREATOR_STORE_PAGE",
     "DEVELOPER_SUPPORT_SERVER",
     "DISCOVERABLE",
     "FEATURABLE",
-    "INVITES_DISABLED",
     "INVITE_SPLASH",
+    "INVITES_DISABLED",
     "MEMBER_VERIFICATION_GATE_ENABLED",
-    "MORE_SOUNDBOARD",
+    "MONETIZATION_ENABLED",
     "MORE_STICKERS",
     "NEWS",
     "PARTNERED",
     "PREVIEW_ENABLED",
-    "RAID_ALERTS_DISABLED",
+    "PRIVATE_THREADS",
     "ROLE_ICONS",
     "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE",
     "ROLE_SUBSCRIPTIONS_ENABLED",
-    "SOUNDBOARD",
+    "SEVEN_DAY_THREAD_ARCHIVE",
+    "THREE_DAY_THREAD_ARCHIVE",
     "TICKETED_EVENTS_ENABLED",
     "VANITY_URL",
     "VERIFIED",
@@ -287,35 +275,6 @@ export default interface Constants {
     PUBLIC:     1;
     GUILD_ONLY: 2;
   };
-  GuildScheduledEventRecurrenceRuleFrequency: {
-    YEARLY:  0;
-    MONTHLY: 1;
-    WEEKLY:  2;
-    DAILY:   3;
-  };
-  GuildScheduledEventRecurrenceRuleMonth: {
-    JANUARY:   1;
-    FEBRUARY:  2;
-    MARCH:     3;
-    APRIL:     4;
-    MAY:       5;
-    JUNE:      6;
-    JULY:      7;
-    AUGUST:    8;
-    SEPTEMBER: 9;
-    OCTOBER:   10;
-    NOVEMBER:  11;
-    DECEMBER:  12;
-  };
-  GuildScheduledEventRecurrenceRuleWeekday: {
-    MONDAY:    0;
-    TUESDAY:   1;
-    WEDNESDAY: 2;
-    THURSDAY:  3;
-    FRIDAY:    4;
-    SATURDAY:  5;
-    SUNDAY:    6;
-  };
   GuildScheduledEventStatus: {
     SCHEDULED: 1;
     ACTIVE:    2;
@@ -344,8 +303,6 @@ export default interface Constants {
     guilds:                      1;
     guildMembers:                2;
     guildBans:                   4;
-    guildExpressions:            8;
-    /** @deprecated */
     guildEmojisAndStickers:      8;
     /** @deprecated */
     guildEmojis:                 8;
@@ -399,7 +356,6 @@ export default interface Constants {
     ENGLISH_UK:           "en-GB";
     ENGLISH_US:           "en-US";
     SPANISH:              "es-ES";
-    SPANISH_LATAM:        "es-419";
     FINNISH:              "fi";
     FRENCH:               "fr";
     HINDI:                "hi";
@@ -425,16 +381,10 @@ export default interface Constants {
     CHINESE_TAIWAN:       "zh-TW";
   };
   MemberFlags: {
-    DID_REJOIN:                      1;
-    COMPLETED_ONBOARDING:            2;
-    BYPASSES_VERIFICATION:           4;
-    STARTED_ONBOARDING:              8;
-    IS_GUEST:                        16;
-    STARTED_HOME_ACTIONS:            32;
-    COMPLETED_HOME_ACTIONS:          64;
-    AUTOMOD_QUARANTINED_USERNAME:    128;
-    // Unknown 1 << 8 (256)
-    DM_SETTINGS_UPSELL_ACKNOWLEDGED: 512;
+    DID_REJOIN:            1;
+    COMPLETED_ONBOARDING:  2;
+    BYPASSES_VERIFICATION: 4;
+    STARTED_ONBOARDING:    8;
   };
   MessageActivityTypes: {
     JOIN:         1;
@@ -494,15 +444,6 @@ export default interface Constants {
     // Unknown 30
     STAGE_TOPIC:                                  31;
     GUILD_APPLICATION_PREMIUM_SUBSCRIPTION:       32;
-    // Unknown 33-35
-    GUILD_INCIDENT_ALERT_MODE_ENABLED:            36;
-    GUILD_INCIDENT_ALERT_MODE_DISABLED:           37;
-    GUILD_INCIDENT_REPORT_RAID:                   38;
-    GUILD_INCIDENT_REPORT_FALSE_ALARM:            39;
-    // Unknown 40-43
-    PURCHASE_NOTIFICATION:                        44;
-    // Unknown 45
-    POLL_RESULT:                                  46;
   };
   MessageReferenceTypes: {
     DEFAULT: 0;
@@ -607,12 +548,10 @@ export default interface Constants {
     sendVoiceMessages:                70368744177664n;
     setVoiceChannelStatus:            281474976710656n;
     sendPolls:                        562949953421312n;
-    useExternalApps:                  1125899906842624n;
-    pinMessages:                      2251799813685248n;
-    allGuild:                         1155597391626430n;
-    allText:                          4011553947384913n;
-    allVoice:                         2080830385030929n;
-    all:                              4362862139015167n;
+    allGuild:                         29697484783806n;
+    allText:                          633854226857041n;
+    allVoice:                         954930478188305n;
+    all:                              985162418487295n;
   };
   PollLayoutTypes: {
     DEFAULT: 1;
@@ -736,10 +675,6 @@ export default interface Constants {
     AUTO: 1;
     FULL: 2;
   };
-  VoiceChannelEffectAnimationTypes: {
-    PREMIUM: 0;
-    BASIC:   1;
-  };
   VoiceOPCodes: {
     IDENTIFY:            0;
     SELECT_PROTOCOL:     1;
@@ -751,9 +686,7 @@ export default interface Constants {
     RESUME:              7;
     HELLO:               8;
     RESUMED:             9;
-    // Unknown 10
-    CLIENTS_CONNECT:     11;
-    // Unknown 12
+    // Unknown 10-12
     CLIENT_DISCONNECT:   13;
     /** @deprecated */
     DISCONNECT:          13;
